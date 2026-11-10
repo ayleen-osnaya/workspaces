@@ -54,18 +54,21 @@
 
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1.0"/>
+      <mass value="0.009"/>
       <!-- VALORES PROVISIONALES: sustituir por CAD -->
       <inertia
-        ixx="0.005" ixy="0" ixz="0"
-        iyy="0.005" iyz="0"
-        izz="0.005"/>
+        ixx="4.16983255e-06"
+        ixy="2.87590305e-13"
+        ixz="-1.77532290e-10"
+        iyy="4.16901342e-06"
+        iyz="-3.70760232e-10"
+        izz="7.40919338e-06"/>
     </inertial>
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://cuchak_description/meshes/wheel.stl"
+        <mesh filename="package://cuchak_description/meshes/llanta.stl"
               scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
       </geometry>
       <material name="black"/>
@@ -74,7 +77,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://cuchak_description/meshes/wheel.stl"
+        <mesh filename="package://cuchak_description/meshes/llanta.stl"
               scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
       </geometry>
     </collision>
@@ -87,18 +90,21 @@
 
     <inertial>
       <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="1.0"/>
+      <mass value="0.009"/>
       <!-- VALORES PROVISIONALES: sustituir por CAD -->
       <inertia
-        ixx="0.005" ixy="0" ixz="0"
-        iyy="0.005" iyz="0"
-        izz="0.005"/>
+        ixx="4.16983255e-06"
+        ixy="2.87590305e-13"
+        ixz="-1.77532290e-10"
+        iyy="4.16901342e-06"
+        iyz="-3.70760232e-10"
+        izz="7.40919338e-06"/>
     </inertial>
 
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://cuchak_description/meshes/wheel.stl"
+        <mesh filename="package://cuchak_description/meshes/llanta.stl"
               scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
       </geometry>
       <material name="black"/>
@@ -107,7 +113,7 @@
     <collision>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://cuchak_description/meshes/wheel.stl"
+        <mesh filename="package://cuchak_description/meshes/llanta.stl"
               scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
       </geometry>
     </collision>
