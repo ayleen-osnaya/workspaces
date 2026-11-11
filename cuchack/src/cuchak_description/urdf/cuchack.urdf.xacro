@@ -5,17 +5,67 @@
        xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- PROPIEDADES COMUNES -->
-  <material name="green">
-    <color rgba="0 1 0 1"/>
-  </material>
   <material name="black">
     <color rgba="0 0 0 1"/>
   </material>
+  <material  name="blue">
+    <color rgba="0.4 0.8 1.0 1.0"/>
+  </material>
+
+
+  
+
 
   <!-- ESCALA STL -->
   <!-- 0.001 si los STL están en milímetros -->
   <xacro:property name="mesh_scale" value="0.001"/>
 
+
+
+
+    <!-- MACRO RUEDAS -->
+  <xacro:macro name="wheel_link" params="prefix mesh_file">
+
+  <link name="${prefix}_wheel_link">
+
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.009"/>
+
+      <inertia
+        ixx="4.16983255e-06"
+        ixy="2.87590305e-13"
+        ixz="-1.77532290e-10"
+        iyy="4.16901342e-06"
+        iyz="-3.70760232e-10"
+        izz="7.40919338e-06"/>
+    </inertial>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_file}"
+              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="${mesh_file}"
+              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+</xacro:macro>
+
+
+
+
+  
 
   <!-- BASE FOOTPRINT -->
   <link name="base_footprint"/>
@@ -43,7 +93,7 @@
         <mesh filename="package://cuchak_description/meshes/base2.stl"
               scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
       </geometry>
-      <material name="green"/>
+      <material name="blue"/>
     </visual>
 
     <collision>
@@ -56,102 +106,75 @@
 
   </link>
 
+  <!-- RUEDA DELANTERA IZQUIERDA -->
+<xacro:wheel_link
+    prefix="left"
+    mesh_file="package://cuchak_description/meshes/llanta_izquierda_trasera.stl"/>
 
-  <!-- RUEDA IZQUIERDA -->
-  <link name="left_wheel_link">
+<!-- RUEDA DELANTERA DERECHA -->
+<xacro:wheel_link
+    prefix="right"
+    mesh_file="package://cuchak_description/meshes/llanta_derecha_trasera.stl"/>
 
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="0.009"/>
-      <!-- VALORES PROVISIONALES: sustituir por CAD -->
-      <inertia
-        ixx="4.16983255e-06"
-        ixy="2.87590305e-13"
-        ixz="-1.77532290e-10"
-        iyy="4.16901342e-06"
-        iyz="-3.70760232e-10"
-        izz="7.40919338e-06"/>
-    </inertial>
+<!-- RUEDA TRASERA IZQUIERDA -->
+<xacro:wheel_link
+    prefix="left_back"
+    mesh_file="package://cuchak_description/meshes/llanta_izquierda_trasera.stl"/>
 
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuchak_description/meshes/llanta.stl"
-              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuchak_description/meshes/llanta.stl"
-              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
-      </geometry>
-    </collision>
-
-  </link>
+<!-- RUEDA TRASERA DERECHA -->
+<xacro:wheel_link
+    prefix="right_back"
+    mesh_file="package://cuchak_description/meshes/llanta_derecha_trasera.stl"/>
 
 
-  <!-- RUEDA DERECHA -->
-  <link name="right_wheel_link">
-
-    <inertial>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <mass value="0.009"/>
-      <!-- VALORES PROVISIONALES: sustituir por CAD -->
-      <inertia
-        ixx="4.16983255e-06"
-        ixy="2.87590305e-13"
-        ixz="-1.77532290e-10"
-        iyy="4.16901342e-06"
-        iyz="-3.70760232e-10"
-        izz="7.40919338e-06"/>
-    </inertial>
-
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuchak_description/meshes/llanta.stl"
-              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-
-    <collision>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <mesh filename="package://cuchak_description/meshes/llanta.stl"
-              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
-      </geometry>
-    </collision>
-
-  </link>
 
 
   <!-- BASE FOOTPRINT -->
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <origin xyz="0 0 0.15" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
 
 
-  <!-- RUEDA IZQUIERDA -->
-  <joint name="left_wheel_joint" type="continuous">
+  <!-- RUEDA DELANTERA IZQUIERDA YA ESTA -->
+<joint name="left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_wheel_link"/>
-    <origin xyz="0 0.20 -0.10" rpy="0 0 0"/>
+    <origin xyz="0 -0.244 0" rpy="0 0 0"/>
+
     <axis xyz="0 1 0"/>
-  </joint>
+</joint>
 
 
-  <!-- RUEDA DERECHA -->
-  <joint name="right_wheel_joint" type="continuous">
+<!-- RUEDA TRASERA DERECHA YA ESTA -->
+<joint name="right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel_link"/>
-    <origin xyz="0 -0.20 -0.10" rpy="0 0 0"/>
+    <origin xyz="-0.164 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-  </joint>
+</joint>
+
+<!-- RUEDA TRASERA IZQUIERDA YA ESTA -->
+<joint name="left_back_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_back_wheel_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+</joint>
+
+ 
+
+
+<!-- RUEDA DELANTERA DERECHA YA ESTA -->
+<joint name="right_back_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_back_wheel_link"/>
+    <origin xyz="-0.164 0.244 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+</joint>
+
+
+
 
 </robot>
