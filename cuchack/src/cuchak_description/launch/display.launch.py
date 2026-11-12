@@ -1,6 +1,6 @@
 from launch import LaunchDescription
 from launch_ros.actions import Node # type: ignore
-from launch_ros.descriptions import ParameterValue # type: ignore
+from launch_ros.parameter_descriptions import ParameterValue
 from launch.substitutions import Command # type: ignore
 import os
 from ament_index_python.packages import get_package_share_path  # type: ignore[reportMissingImports]
