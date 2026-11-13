@@ -34,11 +34,10 @@
   <xacro:property name="half_track" value="0.0859"/>
 
   <!-- Base -->
-  <xacro:property name="base_mass" value="1.093"/>
-  <!-- TODO: centro de masa del chasis en ejes del CAD (lo da tu script de Python, cm_total) -->
-  <xacro:property name="cm_cad_x" value="0.0"/>
-  <xacro:property name="cm_cad_y" value="0.0"/>
-  <xacro:property name="cm_cad_z" value="0.0"/>
+  <xacro:property name="base_mass" value="1.2700"/>
+  <xacro:property name="cm_cad_x" value="-0.0003"/>
+  <xacro:property name="cm_cad_y" value="0.0049"/>
+  <xacro:property name="cm_cad_z" value="-0.0207"/>
 
   <!-- ================= MACRO: LINK DE LLANTA =================
        El STL de la llanta ya viene orientado como en el CAD: su eje de giro es X
@@ -121,13 +120,11 @@
 
   <link name="base_link">
     <inertial>
-      <!-- Origen = centro de masa. Inercia en ejes del CAD (por eso el yaw) y respecto al CM.
-           TODO: reemplaza el tensor por el que calcule tu script (I_total) -->
       <origin xyz="${-cm_cad_y} ${cm_cad_x} ${cm_cad_z}" rpy="0 0 ${cad_yaw}"/>
       <mass value="${base_mass}"/>
-      <inertia ixx="0.183301817" ixy="0.0000092607" ixz="-0.0004030043"
-               iyy="0.177678924" iyz="-0.0348575376"
-               izz="0.007079515"/>
+      <inertia ixx="0.010070" ixy="0.000075" ixz="0.000016"
+              iyy="0.001856" iyz="-0.000063"
+              izz="0.010855"/>
     </inertial>
     <visual>
       <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
