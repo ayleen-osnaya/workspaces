@@ -52,7 +52,7 @@ def generate_launch_description():
     gz_bridge_node = Node(
         package="ros_gz_bridge",
         executable="parameter_bridge",
-        parameters=[gz_bridge_config_path],
+        parameters=[{'config_file': gz_bridge_config_path}],
     )
 
     rviz2_node = Node(
