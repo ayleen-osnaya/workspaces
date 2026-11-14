@@ -135,10 +135,9 @@
       <material name="blue"/>
     </visual>
     <collision>
-      <origin xyz="0 0 0" rpy="0 0 ${cad_yaw}"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <mesh filename="package://cuchak_description/meshes/base.stl"
-              scale="${mesh_scale} ${mesh_scale} ${mesh_scale}"/>
+        <box size="0.45364 0.19758 0.11505"/>
       </geometry>
     </collision>
   </link>

@@ -1,11 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <gazebo>
-    <!-- Publica los joints (necesario para TF de las llantas en ROS) -->
-    <plugin filename="gz-sim-joint-state-publisher-system"
-            name="gz::sim::systems::JointStatePublisher">
-      <topic>joint_states</topic>
-    </plugin>
+    
 
     <!-- Dirección Ackermann: tracción trasera, dirección delantera -->
     <plugin filename="gz-sim-ackermann-steering-system"
@@ -35,20 +31,26 @@
       <odom_publish_frequency>50</odom_publish_frequency>
     </plugin>
 
-
+    <!-- Publica los joints (necesario para TF de las llantas en ROS) -->
     <plugin
       filename="gz-sim-joint-state-publisher-system"
       name="gz::sim::systems::JointStatePublisher">
 
       <topic>joint_states</topic>
       
-      <joint_name>rear_left_wheel_joint</joint_name>
-      <joint_name>rear_right_wheel_joint</joint_name>
+      <joint_name>front_left_wheel_joint</joint_name>
+      <joint_name>front_right_wheel_joint</joint_name>
+
       <joint_name>front_left_steering_joint</joint_name>
       <joint_name>front_right_steering_joint</joint_name>
 
+      <joint_name>rear_left_wheel_joint</joint_name>
+      <joint_name>rear_right_wheel_joint</joint_name>
+
       <update_rate>50</update_rate>
     </plugin>
+
+  
 
   </gazebo>
 
