@@ -53,6 +53,7 @@ def generate_launch_description():
         package="ros_gz_bridge",
         executable="parameter_bridge",
         parameters=[{'config_file': gz_bridge_config_path}],
+        output="screen"
     )
 
     rviz2_node = Node(
