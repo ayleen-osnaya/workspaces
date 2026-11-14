@@ -1,7 +1,17 @@
 <?xml version="1.0"?>
 <robot name="cuchak" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find cuchak_description)/urdf/common_properties.xacro"/>
+  
   <xacro:include filename="$(find cuchak_description)/urdf/gz_definitions.xacro"/>
+
+  
   <xacro:include filename="$(find cuchak_description)/urdf/mobile_base.xacro"/>
+
+  
+  <xacro:include filename="$(find cuchak_description)/urdf/webcam.xacro"/>
+
+
   
 
 </robot>

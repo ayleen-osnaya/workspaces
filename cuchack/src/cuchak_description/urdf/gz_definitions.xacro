@@ -1,7 +1,15 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
     <gazebo>
-    
+
+     <!-- Sensores -->
+     <plugin filename="gz-sim-sensors-system"
+             name="gz::sim::systems::Sensors">
+       <renderer_engine>ogre2</renderer_engine>
+     </plugin>
+
+
+
 
     <!-- Dirección Ackermann: tracción trasera, dirección delantera -->
     <plugin filename="gz-sim-ackermann-steering-system"
@@ -30,6 +38,8 @@
       <child_frame_id>base_footprint</child_frame_id>
       <odom_publish_frequency>50</odom_publish_frequency>
     </plugin>
+
+
 
     <!-- Publica los joints (necesario para TF de las llantas en ROS) -->
     <plugin
