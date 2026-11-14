@@ -26,6 +26,9 @@ def generate_launch_description():
         'GZ_SIM_RESOURCE_PATH',
         os.path.dirname(str(cuchak_share)))
 
+    gz_bridge_config_path = os.path.join(get_package_share_path('cuchak_gz_bringup'),
+                                         'config', 'gz_bridge.yaml')
+
     robot_description = ParameterValue(Command(['xacro ', urdf_path]), value_type=str)
 
     robot_state_publisher_node = Node(
@@ -46,6 +49,12 @@ def generate_launch_description():
         output="screen"
     )
 
+    gz_bridge_node = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        parameters=[gz_bridge_config_path],
+    )
+
     rviz2_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -57,5 +66,6 @@ def generate_launch_description():
         robot_state_publisher_node,
         gz_sim_launch,
         gz_create_node,
+        gz_bridge_node,
         rviz2_node
     ])
