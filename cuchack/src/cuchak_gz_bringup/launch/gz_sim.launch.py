@@ -29,6 +29,9 @@ def generate_launch_description():
     gz_bridge_config_path = os.path.join(get_package_share_path('cuchak_gz_bringup'),
                                          'config', 'gz_bridge.yaml')
 
+    gz_worlds_path = os.path.join(get_package_share_path('cuchak_gz_bringup'),
+                                 'worlds', 'empty.sdf')
+
     robot_description = ParameterValue(Command(['xacro ', urdf_path]), value_type=str)
 
     robot_state_publisher_node = Node(
@@ -39,13 +42,14 @@ def generate_launch_description():
 
     gz_sim_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(gz_sim_path),
-        launch_arguments={'gz_args': 'empty.sdf -r -v 4'}.items()
+        launch_arguments={'gz_args': f'{gz_worlds_path} -r -v 4'}.items()
     )
 
     gz_create_node = Node(
         package="ros_gz_sim",
         executable="create",
-        arguments=["-topic", "/robot_description"],
+        arguments=["-topic", "/robot_description",
+                "z", "0.0", ],
         output="screen"
     )
 
