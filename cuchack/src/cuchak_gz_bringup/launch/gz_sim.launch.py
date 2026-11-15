@@ -97,7 +97,7 @@ def generate_launch_description():
         DeclareLaunchArgument(
             'world',
             default_value='empty.sdf',
-            choices=['empty.sdf'],
+            choices=['empty.sdf', 'moon.sdf'],
             description='Mundo de Gazebo que se va a cargar'
         ),
 
