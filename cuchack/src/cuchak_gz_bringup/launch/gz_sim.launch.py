@@ -15,7 +15,7 @@ def generate_launch_description():
 
     urdf_path = os.path.join(cuchak_share, 'urdf', 'cuchak.urdf.xacro')
 
-    rviz_config_path = os.path.join(get_package_share_path('custom_turtlebot_description'),
+    rviz_config_path = os.path.join(get_package_share_path('cuchak_description'),
                                     'rviz', 'config.rviz')
 
     gz_sim_path = os.path.join(get_package_share_path('ros_gz_sim'),
