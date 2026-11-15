@@ -59,6 +59,7 @@
             <update_rate>30</update_rate>
             <visualize>true</visualize>
             <topic>webcam_image</topic>
+            <gz_frame_id>webcam_link</gz_frame_id>
         </sensor>
     </gazebo>
 
