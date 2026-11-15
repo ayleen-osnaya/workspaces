@@ -20,7 +20,7 @@
         <geometry>
             <box size="${webcam_length} ${webcam_width} ${webcam_height}"/>
         </geometry>
-        <material name="green"/>
+        <material name="black"/>
         </visual>
 
         <collision>
@@ -40,7 +40,7 @@
 
 
 
-    <gazebo>
+    <gazebo reference="webcam_link">
         <sensor type="camera" name="webcam">
             <pose>0 0 0 0 0 0</pose>
             <camera>
