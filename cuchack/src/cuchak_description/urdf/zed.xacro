@@ -1,66 +1,182 @@
+<?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <xacro:property name="zed_length" value="0.05"/>
-    <xacro:property name="zed_width" value="0.05"/>
-    <xacro:property name="zed_height" value="0.05"/>
-    <xacro:property name="zed_mass" value="0.1"/>
+  <!-- ================= PARÁMETROS (ZED 2; cambia estos si tu modelo es otro) =================
+       Datos de la hoja del fabricante: baseline 0.12 m, caja ~175 x 30 x 33 mm, ~166 g,
+       rango de profundidad 0.3 a 20 m, FOV máx. 110° horizontal.
+       ZED Mini: baseline 0.063, caja 124.5 x 30.5 x 26.5 mm, ~63 g -->
 
-    <link name="zed_link">
+  <!-- Caja (x = profundidad, y = ancho, z = alto). La ZED es larga a lo ancho -->
+  <xacro:property name="zed_length" value="0.030"/>
+  <xacro:property name="zed_width"  value="0.175"/>
+  <xacro:property name="zed_height" value="0.033"/>
+  <xacro:property name="zed_mass"   value="0.166"/>
 
-        <xacro:box_inertia
-        l="${zed_length}"
-        w="${zed_width}"
-        h="${zed_height}"
-        m="${zed_mass}"
-        o_xyz="0 0 0"
-        o_rpy="0 0 0"/>
+ 
 
-        <visual>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-            <box size="${zed_length} ${zed_width} ${zed_height}"/>
-        </geometry>
-        <material name="black"/>
-        </visual>
+  <!-- Estéreo -->
+  <xacro:property name="zed_baseline" value="0.12"/>
 
-        <collision>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-        <geometry>
-            <box size="${zed_length} ${zed_width} ${zed_height}"/>
-        </geometry>
-        </collision>
+  <!-- Imagen (HD720 de la ZED 2) y FOV (110° = 1.9199 rad; las imágenes rectificadas
+       suelen tener menos, ajústalo si lo necesitas) -->
+  <xacro:property name="zed_img_w" value="1280"/>
+  <xacro:property name="zed_img_h" value="720"/>
+  <xacro:property name="zed_hfov"  value="1.7878"/>
+  <xacro:property name="zed_rate"  value="30"/>
 
-    </link>
+  <!-- Rangos: color y profundidad -->
+  <xacro:property name="zed_color_near" value="0.05"/>
+  <xacro:property name="zed_color_far"  value="100"/>
+  <xacro:property name="zed_depth_near" value="0.3"/>
+  <xacro:property name="zed_depth_far"  value="20"/>
 
-    <joint name="zed_joint" type="fixed">
-        <parent link="base_link"/>
-        <child link="zed_link"/>
-        <origin xyz="0 0 0" rpy="0 0 0"/>
-    </joint>
+  <!-- Intrínsecos (modelo pinhole, sin distorsión: las imágenes de la ZED salen rectificadas) -->
+  <xacro:property name="zed_fx" value="${(zed_img_w/2)/tan(zed_hfov/2)}"/>
+  <xacro:property name="zed_fy" value="${zed_fx}"/>
+  <xacro:property name="zed_cx" value="${zed_img_w/2}"/>
+  <xacro:property name="zed_cy" value="${zed_img_h/2}"/>
 
+ 
 
+  <!-- ================= CUERPO DE LA CÁMARA ================= -->
+  <link name="zed_link">
+    <xacro:box_inertia m="${zed_mass}" l="${zed_length}" w="${zed_width}" h="${zed_height}"
+                       o_xyz="0 0 0" o_rpy="0 0 0"/>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${zed_length} ${zed_width} ${zed_height}"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="${zed_length} ${zed_width} ${zed_height}"/>
+      </geometry>
+    </collision>
+  </link>
 
-    <gazebo reference="zed_link">
-        <sensor type="depth_camera" name="zed">
-            <pose>0 0 0 0 0 0</pose>
-            <camera>
-                <horizontal_fov>1.3962634</horizontal_fov>
-                <image>
-                    <width>640</width>
-                    <height>480</height>
-                    <format>R8G8B8</format>
-                </image>
-                <clip>
-                    <near>0.1</near>
-                    <far>100</far>
-                </clip>
-            </camera>
-            <always_on>true</always_on>
-            <update_rate>30</update_rate>
-            <visualize>true</visualize>
-            <topic>zed_image</topic>
-            <gz_frame_id>zed_link</gz_frame_id>
-        </sensor>
-    </gazebo>
+  <joint name="zed_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="zed_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= LAS DOS CÁMARAS (lentes en la cara frontal, separadas por el baseline) ================= -->
+  <link name="zed_left_camera_link"/>
+  <joint name="zed_left_camera_joint" type="fixed">
+    <parent link="zed_link"/>
+    <child link="zed_left_camera_link"/>
+    <origin xyz="${zed_length/2} ${zed_baseline/2} 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="zed_right_camera_link"/>
+  <joint name="zed_right_camera_joint" type="fixed">
+    <parent link="zed_link"/>
+    <child link="zed_right_camera_link"/>
+    <origin xyz="${zed_length/2} ${-zed_baseline/2} 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= SENSORES EN GAZEBO ================= -->
+
+  <!-- Cámara izquierda: color + profundidad + nube de puntos (la profundidad de la ZED
+       está registrada a la cámara izquierda). Topics: zed/left/image, depth_image, points, camera_info -->
+  <gazebo reference="zed_left_camera_link">
+    <sensor name="zed_left" type="rgbd_camera">
+      <always_on>true</always_on>
+      <update_rate>${zed_rate}</update_rate>
+      <visualize>false</visualize>
+      <topic>zed/left</topic>
+      <gz_frame_id>zed_left_camera_link</gz_frame_id>
+      <camera>
+        <horizontal_fov>${zed_hfov}</horizontal_fov>
+        <image>
+          <width>${zed_img_w}</width>
+          <height>${zed_img_h}</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>${zed_color_near}</near>
+          <far>${zed_color_far}</far>
+        </clip>
+        <lens>
+          <intrinsics>
+            <fx>${zed_fx}</fx>
+            <fy>${zed_fy}</fy>
+            <cx>${zed_cx}</cx>
+            <cy>${zed_cy}</cy>
+            <s>0</s>
+          </intrinsics>
+          <projection>
+            <p_fx>${zed_fx}</p_fx>
+            <p_fy>${zed_fy}</p_fy>
+            <p_cx>${zed_cx}</p_cx>
+            <p_cy>${zed_cy}</p_cy>
+            <tx>0</tx>
+            <ty>0</ty>
+          </projection>
+        </lens>
+        <depth_camera>
+          <output>depths</output>
+          <clip>
+            <near>${zed_depth_near}</near>
+            <far>${zed_depth_far}</far>
+          </clip>
+        </depth_camera>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- Cámara derecha: solo color. Su matriz de proyección lleva tx = -fx * baseline,
+       que es lo que usan los algoritmos estéreo de ROS -->
+  <gazebo reference="zed_right_camera_link">
+    <sensor name="zed_right" type="camera">
+      <always_on>true</always_on>
+      <update_rate>${zed_rate}</update_rate>
+      <visualize>false</visualize>
+      <topic>zed/right/image</topic>
+      <gz_frame_id>zed_right_camera_link</gz_frame_id>
+      <camera>
+        <horizontal_fov>${zed_hfov}</horizontal_fov>
+        <image>
+          <width>${zed_img_w}</width>
+          <height>${zed_img_h}</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>${zed_color_near}</near>
+          <far>${zed_color_far}</far>
+        </clip>
+        <lens>
+          <intrinsics>
+            <fx>${zed_fx}</fx>
+            <fy>${zed_fy}</fy>
+            <cx>${zed_cx}</cx>
+            <cy>${zed_cy}</cy>
+            <s>0</s>
+          </intrinsics>
+          <projection>
+            <p_fx>${zed_fx}</p_fx>
+            <p_fy>${zed_fy}</p_fy>
+            <p_cx>${zed_cx}</p_cx>
+            <p_cy>${zed_cy}</p_cy>
+            <tx>${-zed_fx*zed_baseline}</tx>
+            <ty>0</ty>
+          </projection>
+        </lens>
+      </camera>
+    </sensor>
+  </gazebo>
+
+  <!-- IMU de la ZED 2 / 2i (400 Hz según la hoja). Quítala si tu modelo no la trae -->
+  <gazebo reference="zed_link">
+    <sensor name="zed_imu" type="imu">
+      <always_on>true</always_on>
+      <update_rate>400</update_rate>
+      <topic>zed/imu</topic>
+      <gz_frame_id>zed_link</gz_frame_id>
+    </sensor>
+  </gazebo>
 
 </robot>

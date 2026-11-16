@@ -11,6 +11,8 @@
   
   <xacro:include filename="$(find cuchak_description)/urdf/webcam.xacro"/>
 
+  <xacro:include filename="$(find cuchak_description)/urdf/zed.xacro"/>
+
 
   
 
