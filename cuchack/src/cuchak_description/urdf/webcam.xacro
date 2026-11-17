@@ -40,6 +40,7 @@
 
 
 
+    
     <gazebo reference="webcam_link">
         <sensor type="camera" name="webcam">
             <pose>0 0 0 0 0 0</pose>
