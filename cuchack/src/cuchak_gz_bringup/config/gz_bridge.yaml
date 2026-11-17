@@ -64,3 +64,12 @@
   ros_type_name: "sensor_msgs/msg/Imu"
   gz_type_name: "gz.msgs.IMU"
   direction: GZ_TO_ROS
+
+
+# ULTRASONICO HC-SR04 --------------------------------------
+
+- ros_topic_name: "ultrasonico_1"
+  gz_topic_name: "ultrasonico_1"
+  ros_type_name: "sensor_msgs/msg/LaserScan" 
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS

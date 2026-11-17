@@ -13,6 +13,7 @@
 
   <xacro:include filename="$(find cuchak_description)/urdf/zed.xacro"/>
 
+  <xacro:include filename="$(find cuchak_description)/urdf/ultrasonico.xacro"/>
 
   
 
