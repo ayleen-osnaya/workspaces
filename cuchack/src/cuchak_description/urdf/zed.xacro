@@ -80,7 +80,7 @@
 
   <!-- ================= SENSORES EN GAZEBO ================= -->
 
-  <!-- Cámara izquierda: color + profundidad + nube de puntos (la profundidad de la ZED
+  <!-- Cámara izquierda: color + profundidad + nube de puntos (la profundidad de la ZED ros2 launch cuchak_gz_bringup gz_sim.launch.py world:=moon.sdf
        está registrada a la cámara izquierda). Topics: zed/left/image, depth_image, points, camera_info -->
   <gazebo reference="zed_left_camera_link">
     <sensor name="zed_left" type="rgbd_camera">
